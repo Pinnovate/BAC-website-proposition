@@ -1,5 +1,4 @@
-# BACend
-========
+# Back to the BAC  
 
 We at [Pinnovate](https://pinnovate.io/) are trying to re-imagine how Algerian educational services can be enhanced for the greater good. One of the most popular online services is the results website of the BAC (baccalauréat, the secondary-school (lycée) diploma), BEM (Medium school diploma), and the primary school diploma.
 
@@ -26,15 +25,15 @@ It's just **nginx** + **redis**! no other dependency.
 According to [Echourouk journal](http://www.echoroukonline.com/ara/articles/221657.html) there's `1 710 746` BAC candidates, serializing the result to json would be something like this:
 
 ```json
-{
-    'matricule': matricul,
-    'nom': nom,
-    'prenom': prenom,
-    'filiere': filiere,
-    'lieu_de_naissance': lieu_de_naissance,
-    'date_de_naissance': date_de_naissance,
-    'moyenne': moyenne,
- }
+[{
+    "matricule": "<matricul>",
+    "nom": "<nom>",
+    "prenom": "<prenom>",
+    "filiere": "<filiere>",
+    "lieu_de_naissance": "<lieu_de_naissance>",
+    "date_de_naissance": "<date_de_naissance>",
+    "moyenne": "<moyenne>",
+ }]
 ```
 two other values are omitted because they can be deduced from `moyenne`. here's the same json encoded.
 
