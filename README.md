@@ -135,3 +135,9 @@ First install redis, on Ubuntu, this simply is a matter of:
 For nginx, we need [HttpRedis](http://wiki.nginx.org/HttpRedis) module, along with [set-misc-nginx-module](https://github.com/openresty/set-misc-nginx-module), the whole installation instruction can be found in the `install.sh` file.
 
 There's also a simple Python script for generating and Excel file with 1 750 000 random entries and load redis with these entries.
+
+## Disclaimer
+
+We're not going to publish any live demo, or any Android app code (We would like to, but sorry). We do not want any kind of spam, maluse, or mislead people by some search engine keywords when they search Google.
+
+This is much of a software architecture proposal than a live demo. source code doesn't really matter in this case (as it just a simple nginx config + a python script for loading Excel files encoded as json to Redis).
