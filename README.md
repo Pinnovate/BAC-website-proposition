@@ -1,4 +1,4 @@
-# Back to the BAC  
+# BAC Website Proposition
 
 We at [Pinnovate](https://pinnovate.io/) are trying to re-imagine how Algerian educational services can be enhanced for the greater good. One of the most popular online services is the results website of the BAC (baccalauréat, the secondary-school (lycée) diploma), BEM (Medium school diploma), and the primary school diploma.
 
