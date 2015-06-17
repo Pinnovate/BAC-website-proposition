@@ -2,7 +2,7 @@
 
 We at [Pinnovate](https://pinnovate.io/) are trying to re-imagine how Algerian educational services can be enhanced for the greater good. One of the most popular online services is the results website of the BAC (baccalauréat, the secondary-school (lycée) diploma), BEM (Medium school diploma), and the primary school diploma.
 
-Usually theses websites get a big amount of traffics and visits whenever there is an announcement of some national exam results, hence, their respective websites turn out unresponsive, their servers get down. The underlying infrastructure seems to be vertical, not scalable.
+Usually theses websites (especially the BAC one) get a big amount of traffics and visits whenever there is an announcement of some national exam results, hence, their respective websites turn out unresponsive, their servers get down. The underlying infrastructure seems to be vertical (inscrease server hardware each year), not scalable. We'll focus here on how to increase the software performance as well. In a scalable way.
 
 So we decided to make a short experiment (proposal?), of how these websites could resist more to **higher** traffics with modest hardware, so far, this required changing the backend, away from the classic php-mysql-apache, to rather some relatively new stack, if fact, we -almost- completely removed the backend!
 
@@ -18,6 +18,8 @@ So we decided to make a short experiment (proposal?), of how these websites coul
 * Simple to deploy.
 
 It's just **nginx** + **redis**! no other dependency.
+
+![Comparision](http://res.cloudinary.com/walid/image/upload/v1434533651/btb_rt9yhl.png)
 
 ## Facts, and why Redis?
 
@@ -50,16 +52,16 @@ For all candidates would be:
 ~856 mb can be entirely put in RAM!
 
 ### Redis
-[Redis](http://redis.io/) is key-value store, it basically load its data in memory, so it servers as a cache server. if enabled it also buffers out its content to `.rdb` files every once in a while for persistence, these files are loaded on the next server startup.
+[Redis](http://redis.io/) is key-value store, it basically load its data in memory, so it serves as a cache server. if enabled it also buffers out its content to `.rdb` files every once in a while for persistence, these files are loaded on the next server startup.
 
-Given these key features, redis can serve well our use case. Loading all BAC results as encoded json to redis (in memory) then access it directly with nginx. each `matricule` is a redis key, the rest is the value.
+Given these key features, redis can serve well our use case. Loading all BAC results as encoded json to redis (in memory) then access it directly from nginx. each `matricule` is a redis key, the rest is the value.
 
 With a server like nginx, we can route all `/get?key=<matricule>` and proxy pass them to redis, get the result back as json. et le tour est joué :)
 
-To make nginx talk to redis, we need to custom compile it with a redis plugin enabled. Don't be scared, this can be done easily.
+To make nginx talk to redis, we need to custom compile it with Redis plugin enabled. Don't be scared, this can be done easily.
 
 ## Benchmarking
-If all candidates would access the website at the same time, and by time we mean the same minute! which is not likely to happen, but let's expect the worse, this would mean:
+If all candidates would access the website at the same time, and by the same time we mean the same minute! which is not likely to happen, but let's expect the worse, this would mean:
 `1 710 746 requests per minutes = ~28513 req/sec`
 so for an acceptable solution, we need to achieve at least around ~28513 req/sec server performance.
 
@@ -78,9 +80,9 @@ Transfer/sec:     79.97MB
 
 This runs a benchmark for 30 seconds, using 12 threads, and keeping 400 HTTP connections open. With this we got ~**113015 req / sec** this outperform out initial requirement 28513 req/sec!
 
-with more nginx fine-tuning, we got even more than that, on an i7 machine (doesn't really matter as the CPU here is not fully utilized, 8 GB ram with less than 1.5GB used at most), this benchmark used just 4 nginx worker threads.
+With more nginx fine-tuning, we got even more than that, on an i7 machine (doesn't really matter as the CPU here is not fully utilized, 8 GB ram with less than 1.5GB used at most), this benchmark used just 4 nginx worker threads.
 
-As a bonus, you can monitor the disk io using iotop, after disabling nginx logs, there are no disk reads or writes.
+As a bonus, you can monitor the disk io using `iotop`, after disabling nginx logs, there are no disk reads or writes.
 
 ### comparing to php-apache-mysql
 
