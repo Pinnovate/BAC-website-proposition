@@ -102,8 +102,7 @@ Thats around ~14k req/sec, even with OPcache enabled as recommanded by [the PHP 
 ## Reducing http round-trips
 Past websites used this scenario:
 
-* a user visits `bac.onec.dz` and `GET` the file `/index.php`
-* `index.php` might loads bloated image and css files from server.
+* a user visits `bac.onec.dz` and `GET` the file `/index.php`.
 * the user introduces their `matricule` with a `POST` request.
 * the server responds back with `index.php` within it, a javascript code that shows the result in a `alert()` popup.
 * if no luck, the user refreshes the page until it gets something.
