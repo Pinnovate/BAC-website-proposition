@@ -86,7 +86,18 @@ As a bonus, you can monitor the disk io using `iotop`, after disabling nginx log
 
 ### comparing to php-apache-mysql
 
-With the **same machine**. (Soon)
+With the **same machine**, we compared a simple php script that fetchs just the `matricule` and `nom` from mysql database, returns just one line of html, and we got:
+```
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.77ms  197.57ms   1.97s    90.87%
+    Req/Sec     3.50k     1.37k   10.92k    71.56%
+  413244 requests in 30.01s, 86.45MB read
+  Socket errors: connect 0, read 15, write 0, timeout 221
+Requests/sec:  13768.19
+Transfer/sec:      2.88MB
+```
+Thats around ~14k req/sec, even with OPcache enabled as recommanded by [the PHP Docs](http://php.net/manual/en/opcache.installation.php). That is even less than our scenario requirements (28k req/sec) :) 
 
 ## Reducing http round-trips
 Past websites used this scenario:
