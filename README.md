@@ -58,7 +58,48 @@ Given these key features, redis can serve well our use case. Loading all BAC res
 
 With a server like nginx, we can route all `/get?key=<matricule>` and proxy pass them to redis, get the result back as json. et le tour est joué :)
 
-To make nginx talk to redis, we need to custom compile it with Redis plugin enabled. Don't be scared, this can be done easily.
+To make nginx talk to redis, we need to custom compile it with Redis plugin enabled. Don't be scared, this can be done easily, and is a matter of:
+
+```bash
+# assuming we'll compile nginx to /opt
+./configure --prefix=/opt/nginx \
+            --add-module="$current_dir/ngx_http_redis-0.3.7" \
+		    --add-module="$current_dir/set-misc-nginx-module-0.28"
+make -j2
+make install
+```
+
+Then, an example nginx config would be something like this:
+
+```nginx
+...
+
+upstream redisbackend {
+    server 127.0.0.1:6379;
+    keepalive 2024;
+}
+
+server {
+    listen       80;
+    server_name  localhost;
+    access_log  off; # disable access log
+
+    # access_log  logs/host.access.log  main
+
+    location = /get {
+            set_unescape_uri $redis_key $arg_key;  # this requires ngx_set_misc
+            access_log  off;
+            expires 1M;
+            add_header Cache-Control "public";
+            redis_pass     redisbackend;
+            default_type   text/html;
+            error_page     404 /404.html;
+    }
+    
+...
+}
+```
+
 
 ## Benchmarking
 If all candidates would access the website at the same time, and by the same time we mean the same minute! which is not likely to happen, but let's expect the worse, this would mean:
@@ -115,6 +156,7 @@ Enhancing this would be:
 * the user introduces their `matricule`, a javascript code makes a `GET` request without refreshing the page.
 * the result is printed out in a nicely styled yet simple `<div>`.
 * if no luck, a refresh button/icon is presented beside the simple form, with a simple text like `Do not refresh the page, click this button instead`, this user experience trick could save us some http-round-trips and reduce the server load.
+* Publish a mobile app to reduce `GET`ing the `index.html` from the first place, one request less (See below for an example Android app).
 
 ## Going horizontal
 
@@ -125,7 +167,7 @@ Using nginx, we can (optionally) make a simple [load balancing](http://nginx.org
 
 A mobile app itself is huge load reducing solution, all requests in the mobile app can be routed to something like: `android.bac.onec.dz` which is another mirror server. if the main server get down (we still expect the worse :) ), Android users have a chance to still get their results.
 
-(Soon)
+![Comparision](http://res.cloudinary.com/walid/image/upload/c_scale,w_295/v1434559943/Screenshot_2015-06-17-17-39-53_cp65zh.png)
 
 ## Installation and usage
 First install redis, on Ubuntu, this simply is a matter of:
