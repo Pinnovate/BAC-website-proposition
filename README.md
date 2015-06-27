@@ -46,10 +46,10 @@ So a worst case scenario for given result json size is around ~500 bytes per res
 
 For all candidates would be: 
 ```
-1 710 746 * 500 = 855373000 bytes = 855373kb = ~856 mb
+1 710 746 * 500 = 855373000 Bytes = 855373 KB = ~856 MB
 ```
 
-~856 mb can be entirely put in RAM!
+~856 MB can be entirely put in RAM!
 
 ### Redis
 [Redis](http://redis.io/) is key-value store, it basically load its data in memory, so it serves as a cache server. if enabled it also buffers out its content to `.rdb` files every once in a while for persistence, these files are loaded on the next server startup.
